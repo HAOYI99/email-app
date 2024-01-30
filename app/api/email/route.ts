@@ -1,4 +1,5 @@
-import { sendEmail } from "@/app/services/emailService";
+import { saveEmailRecord, sendEmail } from "@/app/services/emailService";
+import { emailRecordSchema } from "@/app/services/validation";
 import { NextRequest, NextResponse } from "next/server";
 
 enum HttpMethod {
@@ -12,11 +13,13 @@ export async function POST(request: NextRequest) {
     if (request.method !== HttpMethod.POST) {
         return NextResponse.json({ message: "Method not allowed" }, { status: 405 })
     }
-    sendEmail({
-        to: "haoyichiew@gmail.com",
-        subject: "NextJS test email services",
-        text: "this is test email"
-    });
+    const emailContent = await request.json();
+    const validation = emailRecordSchema.safeParse(emailContent)
+    if (!validation.success) {
+        return NextResponse.json(validation.error.format(), { status: 400 })
+    }
+    sendEmail(emailContent);
+    saveEmailRecord(emailContent)
     return NoContent()
 }
 
