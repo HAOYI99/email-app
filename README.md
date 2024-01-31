@@ -36,13 +36,17 @@ npm run dev
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
 Now we use the postman to create some records
-![Alt text](readme.image/image.png)
+
+![Alt text](readme.image/image.png) 
+
 You will receive 204 No Content response
 
 Lets click refresh on table in the browser
+
 ![Alt text](readme.image/image-1.png)
 
 we got the new record 
+
 ![Alt text](readme.image/image-2.png)
 
 you may do some filtering or sorting with the table
