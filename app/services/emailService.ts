@@ -20,8 +20,19 @@ const transporter = nodemailer.createTransport({
 
 const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
 
+export async function getRecords(param: any) {
+    const [results, total] = await prisma.$transaction([
+        prisma.emailRecord.findMany(param),
+        prisma.emailRecord.count({ where: param.where })
+    ]);
+    return {
+        data: results,
+        total: total
+    };
+}
+
 export async function sendEmail(record: EmailRecord) {
-    await delay(10000)
+    // await delay(10000)
     const mailOptions = <Mail.Options>{
         from: fromEmail,
         to: record.receiver,
@@ -33,7 +44,7 @@ export async function sendEmail(record: EmailRecord) {
 }
 
 export async function saveEmailRecord(record: EmailRecord) {
-    await delay(10000)
+    // await delay(10000)
     let newRecord = PopulateRecordData(record)
     const MAX_RETRIES = 3
     let retries = 0
