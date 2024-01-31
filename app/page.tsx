@@ -2,9 +2,11 @@
 
 import { PageContainer, ProColumns, ProLayout, ProTable } from "@ant-design/pro-components";
 import { EmailRecord } from "@prisma/client";
-import { DatePicker, Space, Tag } from "antd";
+import { ConfigProvider, DatePicker, Space, Tag } from "antd";
 import dayjs from "dayjs";
 import { HttpMethod } from "./enum/HttpMethod";
+
+import enUS from 'antd/lib/locale/en_US';
 
 export default function Home() {
 
@@ -94,35 +96,37 @@ export default function Home() {
 	]
 
 	return (
-		<ProLayout layout="top">
-			<PageContainer>
-				<ProTable
-					columns={columns}
-					request={async (param, sort, filter) => {
-						console.log(param);
-						
-						const orderBy = { orderBy: transformSortValues(sort) }
-						const fullParam = Object.assign(param, orderBy)
-						const request = await fetch("http://localhost:3000/api/email", {
-							method: HttpMethod.POST,
-							headers: { 'Content-Type': 'application/json' },
-							body: JSON.stringify(fullParam)
-						});
-						const result = await request.json();
-						return {
-							data: result.data,
-							success: true,
-							total: result.total
-						}
-					}}
-					pagination={{
-						showQuickJumper: true,
-						showSizeChanger: true,
-						pageSizeOptions: [5, 10, 20]
-					}}
-				/>
-			</PageContainer>
-		</ProLayout>
+		<ConfigProvider locale={enUS}>
+			<ProLayout layout="top">
+				<PageContainer>
+					<ProTable
+						columns={columns}
+						request={async (param, sort, filter) => {
+							console.log(param);
+
+							const orderBy = { orderBy: transformSortValues(sort) }
+							const fullParam = Object.assign(param, orderBy)
+							const request = await fetch("http://localhost:3000/api/email", {
+								method: HttpMethod.POST,
+								headers: { 'Content-Type': 'application/json' },
+								body: JSON.stringify(fullParam)
+							});
+							const result = await request.json();
+							return {
+								data: result.data,
+								success: true,
+								total: result.total
+							}
+						}}
+						pagination={{
+							showQuickJumper: true,
+							showSizeChanger: true,
+							pageSizeOptions: [5, 10, 20]
+						}}
+					/>
+				</PageContainer>
+			</ProLayout>
+		</ConfigProvider>
 	);
 }
 
